@@ -1,6 +1,4 @@
-#!python3
-
-import subprocess, sys, os
+import subprocess, sys
 
 class bcolors:
     HEADER = '\033[95m'
@@ -13,24 +11,15 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-if len(sys.argv) <= 2:
-    print("USAGE: marmotest.py [problem-name] [program-binary]\nEx. marmotest.py a0 ./a.out")
-    exit(1)
-
-PROBLEM_NAME = sys.argv[1]
-BIN = sys.argv[2:]
-
-# Check problem testdata exists
-if not os.path.isdir(f"testdata/{PROBLEM_NAME}"):
-    print(f"{bcolors.FAIL}Error{bcolors.ENDC}: testdata for problem {PROBLEM_NAME} does not exist yet. Please place your testdata in ./testdata/{PROBLEM_NAME}/ with testcases in the form CASENUM.in, CASENUM.out")
-    exit(1)
-
-print("---Starting Marmotest Pretests---")
+PROBLEM_NAME = 'current'
+BIN = sys.argv[1]
 
 case = 1
+
+print("---Starting Marmotest Testcase Generation---")
 while True:
     try:
-        with open(f'testdata/{PROBLEM_NAME}/{case}.in', 'r') as fi, open(f'testdata/{PROBLEM_NAME}/{case}.out', 'r') as fo:
+        with open(f'testdata/{PROBLEM_NAME}/{case}.in', 'r') as fi, open(f'testdata/{PROBLEM_NAME}/{case}.out', 'w') as fo:
             exp = fo.read()
             testing_process = subprocess.run(BIN, stdin=fi, capture_output=True)
             print(f"Test case #{case}:", end=' ')
@@ -48,5 +37,5 @@ while True:
     except FileNotFoundError:
         break
     case += 1
-    
-print(f"---Marmotest Pretesting for problem {PROBLEM_NAME} passed {case - 1} test case(s)---")
+
+print(f"---Marmotest Generation for problem {PROBLEM_NAME} succeeded---")
